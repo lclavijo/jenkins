@@ -1,0 +1,227 @@
+{
+	"info": {
+		"_postman_id": "35f370e2-d8db-4e9d-b71a-7a6a94dc372d",
+		"name": "x-sell",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "loans",
+			"item": [
+				{
+					"name": "LoansGETByNumber",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Loan returned OK\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    //console.log(jsonData);\r",
+									"    if (pm.expect(jsonData).to.have.property(\"loan\")) {\r",
+									"        loan = jsonData[\"loan\"];\r",
+									"        if (pm.expect(loan).to.have.property(\"loanNumber\")) {\r",
+									"            loanNumber = loan.loanNumber;\r",
+									"            var loanNumberInput = pm.environment.get(\"loanNumber\");\r",
+									"            pm.expect(loanNumber).to.equal(loanNumberInput);\r",
+									"        }\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (data.loanNumber != undefined) {\r",
+									"    pm.environment.set(\"loanNumber\", data.loanNumber);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-end-user-login",
+								"value": "{{endUserLogin}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-request-date-time",
+								"value": "{{currentDateTime}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-terminal",
+								"value": "{{endUserTerminal}}",
+								"type": "text"
+							},
+							{
+								"key": "x-request-id",
+								"value": "{{$randomUUID}}",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{apiKey}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrlLoans}}/loans/by-loan-number/{{loanNumber}}",
+							"host": [
+								"{{baseUrlLoans}}"
+							],
+							"path": [
+								"loans",
+								"by-loan-number",
+								"{{loanNumber}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoansGETById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Loan returned OK\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    //console.log(jsonData);\r",
+									"    if (pm.expect(jsonData).to.have.property(\"loan\")) {\r",
+									"        loan = jsonData[\"loan\"];\r",
+									"        if (pm.expect(loan).to.have.property(\"code\")) {\r",
+									"            code = loan.code;\r",
+									"            var loanIdInput = pm.environment.get(\"loanId\");\r",
+									"            pm.expect(code).to.equal(Number(loanIdInput));\r",
+									"        }\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (data.loanId != undefined) {\r",
+									"    pm.environment.set(\"loanId\", data.loanId);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-end-user-login",
+								"value": "{{endUserLogin}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-request-date-time",
+								"value": "{{currentDateTime}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-terminal",
+								"value": "{{endUserTerminal}}",
+								"type": "text"
+							},
+							{
+								"key": "x-request-id",
+								"value": "{{$randomUUID}}",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{apiKey}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrlLoans}}/loans/{{loanId}}",
+							"host": [
+								"{{baseUrlLoans}}"
+							],
+							"path": [
+								"loans",
+								"{{loanId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "customers",
+			"item": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
