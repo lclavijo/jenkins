@@ -1,0 +1,2548 @@
+{
+	"info": {
+		"_postman_id": "35f370e2-d8db-4e9d-b71a-7a6a94dc372d",
+		"name": "x-sell",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "customers",
+			"item": [
+				{
+					"name": "natural-persons",
+					"item": [
+						{
+							"name": "NaturalPersonsPST",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var aux = pm.variables.replaceIn(\"{{$randomBankAccount}}{{$randomBankAccount}}\");\r",
+											"var customerDocNumber = aux.substring(0, 10);\r",
+											"pm.environment.set(\"customerDocNumber\", customerDocNumber);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Customer returned OK\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    //console.log(jsonData);\r",
+											"    if (pm.expect(jsonData).to.have.property(\"naturalPerson\")) {\r",
+											"        var naturalPerson = jsonData[\"naturalPerson\"];\r",
+											"        if (pm.expect(naturalPerson).to.have.property(\"code\")) {\r",
+											"            var code = naturalPerson.code;\r",
+											"            pm.environment.set(\"customerId\", code);\r",
+											"        }\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-end-user-login",
+										"value": "{{endUserLogin}}",
+										"type": "text"
+									},
+									{
+										"key": "x-end-user-request-date-time",
+										"value": "{{currentDateTime}}",
+										"type": "text"
+									},
+									{
+										"key": "x-end-user-terminal",
+										"value": "{{endUserTerminal}}",
+										"type": "text"
+									},
+									{
+										"key": "x-request-id",
+										"value": "{{$randomUUID}}",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{apiKey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"naturalPerson\": {\r\n        \"identification\": {\r\n            \"number\": \"{{customerDocNumber}}\",\r\n            \"type\": {\r\n                \"code\": \"CC\"\r\n            }\r\n        },\r\n        \"name\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"otherLastName\": \"HINCAPIE\",\r\n        \"status\": {\r\n            \"code\": \"V\"\r\n        },\r\n        \"gender\": {\r\n            \"code\": \"M\"\r\n        },\r\n        \"sex\": {\r\n            \"code\": \"M\"\r\n        },\r\n        \"birthDate\": \"2000-01-01\",\r\n        \"cityBirth\": {\r\n            \"code\": 41\r\n        },\r\n        \"maritalStatus\": {\r\n            \"code\": \"S\"\r\n        },\r\n        \"countryBirth\": {\r\n            \"code\": 484\r\n        },\r\n        \"officer\": {\r\n            \"code\": {{officerId}}\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlCustomers}}/customers/natural-persons",
+									"host": [
+										"{{baseUrlCustomers}}"
+									],
+									"path": [
+										"customers",
+										"natural-persons"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "NaturalPersonGetById",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Customer returned OK\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    //console.log(jsonData);\r",
+											"    if (pm.expect(jsonData).to.have.property(\"naturalPerson\")) {\r",
+											"        var naturalPerson = jsonData[\"naturalPerson\"];\r",
+											"        if (pm.expect(naturalPerson).to.have.property(\"code\")) {\r",
+											"            var code = naturalPerson.code;\r",
+											"            var customerIdInput = pm.environment.get(\"customerId\");\r",
+											"            pm.expect(code).to.equal(Number(customerIdInput));\r",
+											"        }\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-end-user-login",
+										"value": "{{endUserLogin}}",
+										"type": "text"
+									},
+									{
+										"key": "x-end-user-request-date-time",
+										"value": "{{currentDateTime}}",
+										"type": "text"
+									},
+									{
+										"key": "x-end-user-terminal",
+										"value": "{{endUserTerminal}}",
+										"type": "text"
+									},
+									{
+										"key": "x-request-id",
+										"value": "{{$randomUUID}}",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{apiKey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrlCustomers}}/customers/natural-persons/:customerId",
+									"host": [
+										"{{baseUrlCustomers}}"
+									],
+									"path": [
+										"customers",
+										"natural-persons",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "{{customerId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "NaturalPersonsPTC",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Customer returned OK\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    //console.log(jsonData);\r",
+											"    if (pm.expect(jsonData).to.have.property(\"naturalPerson\")) {\r",
+											"        var naturalPerson = jsonData[\"naturalPerson\"];\r",
+											"        if (pm.expect(naturalPerson).to.have.property(\"code\")) {\r",
+											"            var code = naturalPerson.code;\r",
+											"            var customerIdInput = pm.environment.get(\"customerId\");\r",
+											"            pm.expect(code).to.equal(Number(customerIdInput));\r",
+											"        }\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "x-end-user-login",
+										"value": "{{endUserLogin}}",
+										"type": "text"
+									},
+									{
+										"key": "x-end-user-request-date-time",
+										"value": "{{currentDateTime}}",
+										"type": "text"
+									},
+									{
+										"key": "x-end-user-terminal",
+										"value": "{{endUserTerminal}}",
+										"type": "text"
+									},
+									{
+										"key": "x-request-id",
+										"value": "{{$randomUUID}}",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{apiKey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"naturalPerson\": {\r\n        \"otherLastName\": \"HINCAPIE\",\r\n        \"birthDate\": \"1999-09-09\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlCustomers}}/customers/natural-persons/:customerId",
+									"host": [
+										"{{baseUrlCustomers}}"
+									],
+									"path": [
+										"customers",
+										"natural-persons",
+										":customerId"
+									],
+									"variable": [
+										{
+											"key": "customerId",
+											"value": "{{customerId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CustomersNaturalPersonsPSTByIdentification",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Customer returned OK\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    //console.log(jsonData);\r",
+											"    if (pm.expect(jsonData).to.have.property(\"naturalPerson\")) {\r",
+											"        var naturalPerson = jsonData[\"naturalPerson\"];\r",
+											"        if (pm.expect(naturalPerson).to.have.property(\"code\")) {\r",
+											"            var code = naturalPerson.code;\r",
+											"            var customerIdInput = pm.environment.get(\"customerId\");\r",
+											"            pm.expect(code).to.equal(Number(customerIdInput));\r",
+											"        }\r",
+											"    }\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "x-end-user-login",
+										"value": "{{endUserLogin}}",
+										"type": "text"
+									},
+									{
+										"key": "x-end-user-request-date-time",
+										"value": "{{currentDateTime}}",
+										"type": "text"
+									},
+									{
+										"key": "x-end-user-terminal",
+										"value": "{{endUserTerminal}}",
+										"type": "text"
+									},
+									{
+										"key": "x-request-id",
+										"value": "{{$randomUUID}}",
+										"type": "text"
+									},
+									{
+										"key": "x-api-key",
+										"value": "{{apiKey}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"naturalPerson\": {\r\n        \"identification\": {\r\n            \"number\": \"{{customerDocNumber}}\",\r\n            \"type\": {\r\n                \"code\": \"CC\"\r\n            }\r\n        }\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrlCustomers}}/customers/natural-persons/by-identification",
+									"host": [
+										"{{baseUrlCustomers}}"
+									],
+									"path": [
+										"customers",
+										"natural-persons",
+										"by-identification"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "contacts",
+					"item": [
+						{
+							"name": "addresses",
+							"item": [
+								{
+									"name": "AddressesPST",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"address\")) {\r",
+													"        var address = jsonData[\"address\"];\r",
+													"        if (pm.expect(address).to.have.property(\"code\")) {\r",
+													"            var code = address.code;\r",
+													"            pm.environment.set(\"addressId\", code);\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"address\": {\r\n        \"address\": \"{{$randomStreetAddress}}\",\r\n        \"type\": {\r\n            \"code\": \"RE\"\r\n        },\r\n        \"city\": {\r\n            \"code\": 1001\r\n        },\r\n        \"primaryAddress\": false,\r\n        \"province\": {\r\n            \"code\": 1\r\n        },\r\n        \"street\": \"{{$randomStreetName}}\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/addresses",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"addresses"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AddressesGETAll",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"addresses\")) {\r",
+													"        var addresses = jsonData[\"addresses\"];\r",
+													"        pm.expect(addresses).not.to.be.empty;\r",
+													"\r",
+													"        var members = [];\r",
+													"        addresses.forEach(function(e){\r",
+													"            members.push(e.code);\r",
+													"        });\r",
+													"        pm.expect(members).contains(Number(pm.environment.get(\"addressId\")));\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/addresses",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"addresses"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AddressesPTC",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"address\")) {\r",
+													"        var address = jsonData[\"address\"];\r",
+													"        if (pm.expect(address).to.have.property(\"code\")) {\r",
+													"            var code = address.code;\r",
+													"            var addressIdInput = pm.environment.get(\"addressId\");\r",
+													"            pm.expect(code).to.equal(Number(addressIdInput));\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"address\": {\r\n        \"address\": \"{{$randomStreetAddress}}\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/addresses/:addressId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"addresses",
+												":addressId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "addressId",
+													"value": "{{addressId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AddressesGETById",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"address\")) {\r",
+													"        var address = jsonData[\"address\"];\r",
+													"        if (pm.expect(address).to.have.property(\"code\")) {\r",
+													"            var code = address.code;\r",
+													"            var addressIdInput = pm.environment.get(\"addressId\");\r",
+													"            pm.expect(code).to.equal(Number(addressIdInput));\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/addresses/:addressId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"addresses",
+												":addressId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "addressId",
+													"value": "{{addressId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AddressesDEL",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/addresses/:addressId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"addresses",
+												":addressId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "addressId",
+													"value": "{{addressId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "personal-references",
+							"item": [
+								{
+									"name": "CustomersPersonalReferencesPST",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"personalReference\")) {\r",
+													"        var personalReference = jsonData[\"personalReference\"];\r",
+													"        if (pm.expect(personalReference).to.have.property(\"code\")) {\r",
+													"            var code = personalReference.code;\r",
+													"            pm.environment.set(\"personalReferenceId\", code);\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"personalReference\": {\r\n        \"name\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"otherLastName\": \"{{$randomLastName}}\",\r\n        \"address\": \"{{$randomStreetAddress}}\",\r\n        \"homePhone\": \"{{$randomPhoneNumber}}\",\r\n        \"relationshipType\": {\r\n            \"code\": \"AM\"\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/personal-references",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"personal-references"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CustomersPersonalReferencesGETAll",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"personalReferences\")) {\r",
+													"        var personalReferences = jsonData[\"personalReferences\"];\r",
+													"        pm.expect(personalReferences).not.to.be.empty;\r",
+													"\r",
+													"        var members = [];\r",
+													"        personalReferences.forEach(function(e){\r",
+													"            members.push(e.code);\r",
+													"        });\r",
+													"        pm.expect(members).contains(Number(pm.environment.get(\"personalReferenceId\")));\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/personal-references",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"personal-references"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CustomersPersonalReferencesPTC",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"personalReference\")) {\r",
+													"        var personalReference = jsonData[\"personalReference\"];\r",
+													"        if (pm.expect(personalReference).to.have.property(\"code\")) {\r",
+													"            var code = personalReference.code;\r",
+													"            var personalReferenceIdInput = pm.environment.get(\"personalReferenceId\");\r",
+													"            pm.expect(code).to.equal(Number(personalReferenceIdInput));\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"personalReference\": {\r\n        \"name\": \"{{$randomFirstName}}\",\r\n        \"relationshipType\": {\r\n            \"code\": \"MA\"\r\n        }\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/personal-references/:referenceId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"personal-references",
+												":referenceId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "referenceId",
+													"value": "{{personalReferenceId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CustomersPersonalReferencesGETById (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"personalReference\")) {\r",
+													"        var personalReference = jsonData[\"personalReference\"];\r",
+													"        if (pm.expect(personalReference).to.have.property(\"code\")) {\r",
+													"            var code = personalReference.code;\r",
+													"            var personalReferenceIdInput = pm.environment.get(\"personalReferenceId\");\r",
+													"            pm.expect(code).to.equal(Number(personalReferenceIdInput));\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/personal-references/:referenceId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"personal-references",
+												":referenceId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "referenceId",
+													"value": "{{personalReferenceId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "CustomersPersonalReferencesDEL",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/personal-references/:referenceId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"personal-references",
+												":referenceId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "referenceId",
+													"value": "{{personalReferenceId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "phones",
+							"item": [
+								{
+									"name": "PhonesPST (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"phone\")) {\r",
+													"        var phone = jsonData[\"phone\"];\r",
+													"        if (pm.expect(phone).to.have.property(\"code\")) {\r",
+													"            var code = phone.code;\r",
+													"            pm.environment.set(\"phoneId\", code);\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"phone\": {\r\n        \"number\": \"{{$randomPhoneNumber}}\",\r\n        \"type\": {\r\n            \"code\": \"C\"\r\n        },\r\n        \"prefix\": {\r\n            \"code\": \"604\"\r\n        },\r\n        \"contactType\": {\r\n            \"code\": \"P\"\r\n        },\r\n        \"principalPhone\": false,\r\n        \"customerServiceLine\": {\r\n            \"code\": \"01\"\r\n        },\r\n        \"contractType\": {\r\n            \"code\": \"PP\"\r\n        },\r\n        \"messagingType\": {\r\n            \"code\": \"WPP\"\r\n        }\r\n    }\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/phones",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"phones"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PhonesGETAll (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"phones\")) {\r",
+													"        var phones = jsonData[\"phones\"];\r",
+													"        pm.expect(phones).not.to.be.empty;\r",
+													"\r",
+													"        var members = [];\r",
+													"        phones.forEach(function(e){\r",
+													"            members.push(e.code);\r",
+													"        });\r",
+													"        pm.expect(members).contains(Number(pm.environment.get(\"phoneId\")));\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/phones",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"phones"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PhonesPTC (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"/*\r",
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"address\")) {\r",
+													"        var address = jsonData[\"address\"];\r",
+													"        if (pm.expect(address).to.have.property(\"code\")) {\r",
+													"            var code = address.code;\r",
+													"            var addressIdInput = pm.environment.get(\"addressId\");\r",
+													"            pm.expect(code).to.equal(Number(addressIdInput));\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													"*/"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"phone\": {\r\n        \"number\": \"{{$randomPhoneNumber}}\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/phones/:phoneId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"phones",
+												":phoneId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "phoneId",
+													"value": "{{phoneId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PhonesGETById (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"phone\")) {\r",
+													"        var phone = jsonData[\"phone\"];\r",
+													"        if (pm.expect(phone).to.have.property(\"code\")) {\r",
+													"            var code = phone.code;\r",
+													"            var phoneIdInput = pm.environment.get(\"phoneId\");\r",
+													"            pm.expect(code).to.equal(Number(phoneIdInput));\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/phones/:phoneId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"phones",
+												":phoneId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "phoneId",
+													"value": "{{phoneId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PhonesDEL (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/phones/:phoneId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"phones",
+												":phoneId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "phoneId",
+													"value": "{{phoneId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "virtual-addresses",
+							"item": [
+								{
+									"name": "VirtualAddressesPST (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"virtualAddress\")) {\r",
+													"        var virtualAddress = jsonData[\"virtualAddress\"];\r",
+													"        if (pm.expect(virtualAddress).to.have.property(\"code\")) {\r",
+													"            var code = virtualAddress.code;\r",
+													"            pm.environment.set(\"virtualAddressId\", code);\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"virtualAddress\": {\r\n        \"username\": \"{{$randomEmail}}\",\r\n        \"type\": {\r\n            \"code\": \"CE\"\r\n        },\r\n        \"preferentialUse\": false\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/virtual-addresses",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"virtual-addresses"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "VirtualAddressesGETAll (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"virtualAddresses\")) {\r",
+													"        var virtualAddresses = jsonData[\"virtualAddresses\"];\r",
+													"        pm.expect(virtualAddresses).not.to.be.empty;\r",
+													"\r",
+													"        var members = [];\r",
+													"        virtualAddresses.forEach(function(e){\r",
+													"            members.push(e.code);\r",
+													"        });\r",
+													"        pm.expect(members).contains(Number(pm.environment.get(\"virtualAddressId\")));\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/virtual-addresses",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"virtual-addresses"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "VirtualAddressesPTC (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"virtualAddress\")) {\r",
+													"        var virtualAddress = jsonData[\"virtualAddress\"];\r",
+													"        if (pm.expect(virtualAddress).to.have.property(\"code\")) {\r",
+													"            var code = virtualAddress.code;\r",
+													"            var virtualAddressIdInput = pm.environment.get(\"virtualAddressId\");\r",
+													"            pm.expect(code).to.equal(Number(virtualAddressIdInput));\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"virtualAddress\": {\r\n        \"username\": \"{{$randomEmail}}\",\r\n        \"preferentialUse\": false\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/virtual-addresses/:virtualAddressId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"virtual-addresses",
+												":virtualAddressId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "virtualAddressId",
+													"value": "{{virtualAddressId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "VirtualAddressesGETById (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Service returned OK\", function () {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    //console.log(jsonData);\r",
+													"    if (pm.expect(jsonData).to.have.property(\"virtualAddress\")) {\r",
+													"        var virtualAddress = jsonData[\"virtualAddress\"];\r",
+													"        if (pm.expect(virtualAddress).to.have.property(\"code\")) {\r",
+													"            var code = virtualAddress.code;\r",
+													"            var virtualAddressIdInput = pm.environment.get(\"virtualAddressId\");\r",
+													"            pm.expect(code).to.equal(Number(virtualAddressIdInput));\r",
+													"        }\r",
+													"    }\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/virtual-addresses/:virtualAddressId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"virtual-addresses",
+												":virtualAddressId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "virtualAddressId",
+													"value": "{{virtualAddressId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "VirtualAddressesDEL (no existe)",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "x-end-user-login",
+												"value": "{{endUserLogin}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-request-date-time",
+												"value": "{{currentDateTime}}",
+												"type": "text"
+											},
+											{
+												"key": "x-end-user-terminal",
+												"value": "{{endUserTerminal}}",
+												"type": "text"
+											},
+											{
+												"key": "x-request-id",
+												"value": "{{$randomUUID}}",
+												"type": "text"
+											},
+											{
+												"key": "x-api-key",
+												"value": "{{apiKey}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrlCustomersContacts}}/customers/:customerId/virtual-addresses/:virtualAddressId",
+											"host": [
+												"{{baseUrlCustomersContacts}}"
+											],
+											"path": [
+												"customers",
+												":customerId",
+												"virtual-addresses",
+												":virtualAddressId"
+											],
+											"variable": [
+												{
+													"key": "customerId",
+													"value": "{{customerId}}"
+												},
+												{
+													"key": "virtualAddressId",
+													"value": "{{virtualAddressId}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "CustomersGETAll",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Customers returned OK\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    //console.log(jsonData);\r",
+									"    if (pm.expect(jsonData).to.have.property(\"customers\")) {\r",
+									"        var customers = jsonData[\"customers\"];\r",
+									"        pm.expect(customers).not.to.be.empty;\r",
+									"\r",
+									"        var members = [];\r",
+									"        customers.forEach(function(e){\r",
+									"            members.push(e.code);\r",
+									"        });\r",
+									"        pm.expect(members).contains(Number(pm.environment.get(\"customerId\")));\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-end-user-login",
+								"value": "{{endUserLogin}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-request-date-time",
+								"value": "{{currentDateTime}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-terminal",
+								"value": "{{endUserTerminal}}",
+								"type": "text"
+							},
+							{
+								"key": "x-request-id",
+								"value": "{{$randomUUID}}",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{apiKey}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrlCustomers}}/customers?officerId={{officerId}}&pageSize={{pageSize}}&pg={{pageNumber}}",
+							"host": [
+								"{{baseUrlCustomers}}"
+							],
+							"path": [
+								"customers"
+							],
+							"query": [
+								{
+									"key": "officerId",
+									"value": "{{officerId}}"
+								},
+								{
+									"key": "pageSize",
+									"value": "{{pageSize}}"
+								},
+								{
+									"key": "pg",
+									"value": "{{pageNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CustomersInhibitoryReferencesPOST (no existe)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Service returned OK\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    //console.log(jsonData);\r",
+									"    if (pm.expect(jsonData).to.have.property(\"inhibitoryReference\")) {\r",
+									"        var inhibitoryReference = jsonData[\"inhibitoryReference\"];\r",
+									"        pm.expect(inhibitoryReference).to.have.property(\"code\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-end-user-login",
+								"value": "{{endUserLogin}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-request-date-time",
+								"value": "{{currentDateTime}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-terminal",
+								"value": "{{endUserTerminal}}",
+								"type": "text"
+							},
+							{
+								"key": "x-request-id",
+								"value": "{{$randomUUID}}",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{apiKey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"inhibitoryReference\": {\r\n        \"role\": {\r\n            \"code\": \"P\"\r\n        },\r\n        \"product\": {\r\n            \"number\": \"172\"\r\n        },\r\n        \"process\": {\r\n            \"code\": 0\r\n        }\r\n    } \r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlCustomers}}/customers/:customerId/inhibitory-references",
+							"host": [
+								"{{baseUrlCustomers}}"
+							],
+							"path": [
+								"customers",
+								":customerId",
+								"inhibitory-references"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "{{customerId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "loans",
+			"item": [
+				{
+					"name": "LoansGETByNumber",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Loan returned OK\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    //console.log(jsonData);\r",
+									"    if (pm.expect(jsonData).to.have.property(\"loan\")) {\r",
+									"        var loan = jsonData[\"loan\"];\r",
+									"        if (pm.expect(loan).to.have.property(\"loanNumber\")) {\r",
+									"            var loanNumber = loan.loanNumber;\r",
+									"            var loanNumberInput = pm.environment.get(\"loanNumber\");\r",
+									"            pm.expect(loanNumber).to.equal(loanNumberInput);\r",
+									"        }\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (data.loanNumber != undefined) {\r",
+									"    pm.environment.set(\"loanNumber\", data.loanNumber);\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-end-user-login",
+								"value": "{{endUserLogin}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-request-date-time",
+								"value": "{{currentDateTime}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-terminal",
+								"value": "{{endUserTerminal}}",
+								"type": "text"
+							},
+							{
+								"key": "x-request-id",
+								"value": "{{$randomUUID}}",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{apiKey}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrlLoans}}/loans/by-loan-number/:loanNumber",
+							"host": [
+								"{{baseUrlLoans}}"
+							],
+							"path": [
+								"loans",
+								"by-loan-number",
+								":loanNumber"
+							],
+							"variable": [
+								{
+									"key": "loanNumber",
+									"value": "{{loanNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LoansGETById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Loan returned OK\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    //console.log(jsonData);\r",
+									"    if (pm.expect(jsonData).to.have.property(\"loan\")) {\r",
+									"        var loan = jsonData[\"loan\"];\r",
+									"        if (pm.expect(loan).to.have.property(\"code\")) {\r",
+									"            var code = loan.code;\r",
+									"            var loanIdInput = pm.environment.get(\"loanId\");\r",
+									"            pm.expect(code).to.equal(Number(loanIdInput));\r",
+									"        }\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (data.loanId != undefined) {\r",
+									"    pm.environment.set(\"loanId\", data.loanId);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-end-user-login",
+								"value": "{{endUserLogin}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-request-date-time",
+								"value": "{{currentDateTime}}",
+								"type": "text"
+							},
+							{
+								"key": "x-end-user-terminal",
+								"value": "{{endUserTerminal}}",
+								"type": "text"
+							},
+							{
+								"key": "x-request-id",
+								"value": "{{$randomUUID}}",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{apiKey}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrlLoans}}/loans/:loanId",
+							"host": [
+								"{{baseUrlLoans}}"
+							],
+							"path": [
+								"loans",
+								":loanId"
+							],
+							"variable": [
+								{
+									"key": "loanId",
+									"value": "{{loanId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Successful request\", function () {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);",
+					"});"
+				]
+			}
+		}
+	]
+}
