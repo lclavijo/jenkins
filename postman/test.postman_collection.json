@@ -1,0 +1,100 @@
+{
+	"info": {
+		"_postman_id": "793f5e1e-e6d9-4372-ac88-4c3d379e4ebb",
+		"name": "test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CustomersGETAll",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Customers returned OK\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    //console.log(jsonData);\r",
+							"    if (pm.expect(jsonData).to.have.property(\"customers\")) {\r",
+							"        var customers = jsonData[\"customers\"];\r",
+							"        pm.expect(customers).not.to.be.empty;\r",
+							"\r",
+							"        var members = [];\r",
+							"        customers.forEach(function(e){\r",
+							"            members.push(e.code);\r",
+							"        });\r",
+							"        pm.expect(members).contains(Number(pm.environment.get(\"customerId\")));\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-end-user-login",
+						"value": "{{endUserLogin}}",
+						"type": "text"
+					},
+					{
+						"key": "x-end-user-request-date-time",
+						"value": "{{currentDateTime}}",
+						"type": "text"
+					},
+					{
+						"key": "x-end-user-terminal",
+						"value": "{{endUserTerminal}}",
+						"type": "text"
+					},
+					{
+						"key": "x-request-id",
+						"value": "{{$randomUUID}}",
+						"type": "text"
+					},
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrlCustomers}}/customers?officerId={{officerId}}&pageSize={{pageSize}}&pg={{pageNumber}}",
+					"host": [
+						"{{baseUrlCustomers}}"
+					],
+					"path": [
+						"customers"
+					],
+					"query": [
+						{
+							"key": "officerId",
+							"value": "{{officerId}}"
+						},
+						{
+							"key": "pageSize",
+							"value": "{{pageSize}}"
+						},
+						{
+							"key": "pg",
+							"value": "{{pageNumber}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
