@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'sevencorners/windows-newman'
-            args '-v .:/tmp'
+            args '-v /:/tmp'
         }
     }
     stages {
