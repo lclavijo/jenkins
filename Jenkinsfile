@@ -1,9 +1,11 @@
 pipeline {
-    agent any 
+    agent {
+        docker { image 'sevencorners/windows-newman' }
+    }
     stages {
-        stage('Stage 1') {
+        stage('Test') {
             steps {
-                echo 'Hello world!' 
+                bat 'newman -v'
             }
         }
     }
