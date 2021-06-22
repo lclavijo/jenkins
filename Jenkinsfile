@@ -2,13 +2,13 @@ pipeline {
     agent {
         docker {
             image 'sevencorners/windows-newman'
-            args '.:/tmp'
+            args '-v .:/tmp'
         }
     }
     stages {
         stage('Test') {
             steps {
-                bat 'dir'
+                bat 'dir /tmp'
                 bat 'newman -v'
             }
         }
